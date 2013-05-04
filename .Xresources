@@ -1,0 +1,135 @@
+! < -- use this to comment not #
+! to reload
+! xrdb -load ~/.Xresources
+! {{{ YeahConsole Settings
+!yeahconsole*term:xterm
+yeahconsole*term:xterm
+yeahconsole*consoleHeight:25
+yeahconsole*toggleKey:None+grave
+yeahconsole*keyFull:Control+grave
+yeahconsole*background:#000000
+yeahconsole*foreground:#E6E3E6
+yeahconsole*cursorColor:#E6E3E6
+yeahconsole*transparent:true
+yeahconsole*shading:40
+yeahconsole*restart:1
+yeahconsole*faceName:Terminus:style=Regular:size=18
+yeahconsole*metaSendsEscape:true
+yeahconsole*aniDelay: 0
+! }}}
+! {{{ Xterm Settings
+xterm*transparent:true
+xterm*shading:40
+! }}}
+! {{{ Tango Color Theme URxvt
+!URxvt*color0:  rgb:2e2e/3434/3636
+!URxvt*color1:  rgb:cccc/0000/0000
+!URxvt*color2:  rgb:4e4e/9a9a/0606
+!URxvt*color3:  rgb:c4c4/a0a0/0000
+!URxvt*color4:  rgb:3434/6565/a4a4
+!URxvt*color5:  rgb:7575/5050/7b7b
+!URxvt*color6:  rgb:0606/9820/9a9a
+!URxvt*color7:  rgb:d3d3/d7d7/cfcf
+!URxvt*color8:  rgb:5555/5757/5353
+!URxvt*color9:  rgb:efef/2929/2929
+!URxvt*color10: rgb:8a8a/e2e2/3434
+!URxvt*color11: rgb:fcfc/e9e9/4f4f
+!URxvt*color12: rgb:7272/9f9f/cfcf
+!URxvt*color13: rgb:adad/7f7f/a8a8
+!URxvt*color14: rgb:3434/e2e2/e2e2
+!URxvt*color15: rgb:eeee/eeee/ecec
+! }}}
+! {{{ Tango Color Theme xterm
+!xterm*color0:  rgb:2e2e/3434/3636
+!xterm*color1:  rgb:cccc/0000/0000
+!xterm*color2:  rgb:4e4e/9a9a/0606
+!xterm*color3:  rgb:c4c4/a0a0/0000
+!xterm*color4:  rgb:3434/6565/a4a4
+!xterm*color5:  rgb:7575/5050/7b7b
+!xterm*color6:  rgb:0606/9820/9a9a
+!xterm*color7:  rgb:d3d3/d7d7/cfcf
+!xterm*color8:  rgb:5555/5757/5353
+!xterm*color9:  rgb:efef/2929/2929
+!xterm*color10: rgb:8a8a/e2e2/3434
+!xterm*color11: rgb:fcfc/e9e9/4f4f
+!xterm*color12: rgb:7272/9f9f/cfcf
+!xterm*color13: rgb:adad/7f7f/a8a8
+!xterm*color14: rgb:3434/e2e2/e2e2
+!xterm*color15: rgb:eeee/eeee/ecec
+! }}}
+! {{{ Molokai theme xterm
+*xterm*background: #101010
+*xterm*foreground: #d0d0d0
+*xterm*cursorColor: #d0d0d0
+*xterm*color0: #101010
+*xterm*color1: #960050
+*xterm*color2: #66aa11
+*xterm*color3: #c47f2c
+*xterm*color4: #30309b
+*xterm*color5: #7e40a5
+*xterm*color6: #3579a8
+*xterm*color7: #9999aa
+*xterm*color8: #303030
+*xterm*color9: #ff0090
+*xterm*color10: #80ff00
+*xterm*color11: #ffba68
+*xterm*color12: #5f5fee
+*xterm*color13: #bb88dd
+*xterm*color14: #4eb4fa
+*xterm*color15: #d0d0d0
+! }}}
+! {{{ Xterm Paste Hotkeys
+! http://blog.ssokolow.com/archives/2011/05/01/modernizing-xterms-paste/
+! Scrolling:
+!   Scroll Wheel
+!   Shift-PgUp/PgDn
+!
+! Copy/Paste:
+!   Mouse-Select        : Copy to PRIMARY
+!   Shift + Mouse-Select: Copy to CLIPBOARD
+!
+!   Middle-Click        : Paste from PRIMARY
+!   Shift + Middle-Click: Paste from CLIPBOARD
+!
+!   Ctrl+Shift+V        : Paste from CLIPBOARD
+!   Ctrl+Alt+Shift+V    : Paste from PRIMARY
+!
+
+! More Konsole/Yakuake-like keybindings:
+*VT100.Translations: #override \
+                    Shift <Key>Up:              scroll-back(1) \n\
+                    Shift <Key>Down:            scroll-forw(1) \n\
+                    ~Meta Shift Ctrl <Key>V:    insert-selection(CLIPBOARD) \n\
+                     Meta Shift Ctrl <Key>V:    insert-selection(PRIMARY) \n\
+                    ~Shift <Btn1Up>:            select-end(PRIMARY, CUT_BUFFER0) \n\
+                     Shift <Btn1Up>:            select-end(CLIPBOARD, CUT_BUFFER1) \n\
+                    ~Shift ~Ctrl ~Meta <Btn2Up>:insert-selection(PRIMARY, CUT_BUFFER0) \n\
+                     Shift ~Ctrl ~Meta <Btn2Up>:insert-selection(CLIPBOARD, CUT_BUFFER1)
+! }}}
+
+
+! http://yorikvanhavre.deviantart.com/art/urxvt-tango-theme-113968183
+!urxvt*foreground: #f2f2f2
+!urxvt*background: #101010
+urxvt*color0: #101010
+urxvt*color1: #f13a21
+urxvt*color2: #93f91d
+urxvt*color3: #ffd00a
+urxvt*color4: #004f9e
+urxvt*color5: #ec0048
+urxvt*color6: #2aa7e7
+urxvt*color7: #f2f2f2
+urxvt*color8: #1d202f
+urxvt*color9: #ff361e
+urxvt*color10: #ffc005
+urxvt*color11: #93ff00
+urxvt*color12: #0071ff
+urxvt*color13: #ef0051
+urxvt*color14: #4bb8fd
+urxvt*color15: #a020f0
+!urxvt*transparent: true
+urxvt*shading: 50
+urxvt*fading: 50
+urxvt*font: xft:Bitstream\ Vera\ Sans\ Mono:style=roman:pixelsize=16
+urxvt*scrollBar: false
+
