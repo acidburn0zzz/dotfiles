@@ -478,7 +478,7 @@ ytmp3() { youtube-dl -c --restrict-filenames --extract-audio --audio-format mp3 
 alias info='info --vi-keys'
 
 # pydoc alternatives
-py-help27() { python2.7 -c "help('$1')" ;}	# legacy for py2.7
+# py-help27() { python2.7 -c "help('$1')" ;}	# legacy for py2.7
 py-lsmodules() { python -c "help('modules')" ;} # list all modules, pydoc modules, dir(modules)
 
 # call vim help page from shell prompt
@@ -954,7 +954,7 @@ ctv-news-aljazeera() { rtmpdump -v -r "rtmp://aljazeeraflashlivefs.fplive.net/al
 #------------------------------------------------------
 # http://www.ilive.to/channels
 # Animation, Documentary, Entertainment, Sports, News
-iliveto() { rtmpdump -v -r "rtmp://stream.ilive.to/app/"$1"" -p "http://www.ilive.to/view/23516" -W "http://static.ilive.to/jwplayer/player.swf" -q | mplayer - ;}
+iliveto() { rtmpdump -v -r "rtmp://edge.isearch.to/edge" -p "http://www.ilive.to/view/23516" -W "http://player.ilive.to/player_ilive.swf" -y "$1" -q | mplayer - ;}
 
 ilt-ani-cartoonnetwork() { iliveto "lf4cc63667vxzlx" ;} #2/8/13
 ilt-ani-bleach.jap,eng() { iliveto "cqq87pn1lkxra4k" ;} #2/8/13
@@ -1968,7 +1968,7 @@ ripit-mydefault() {
 	# $@ ; specfic tracks like 1-4,5,8
 	}
 
-vimwiki() { $EDITOR ~/Documents/vimwiki/index.wiki ;}
+notewiki() { $EDITOR ~/Documents/vimwiki/notewiki/index.wiki ;}
 appswiki() { $EDITOR ~/Documents/vimwiki/appswiki/index.wiki ;}
 superwiki() { $EDITOR ~/Documents/vimwiki/superwiki/index.wiki ;}
 gamewiki() { $EDITOR ~/Documents/vimwiki/gamewiki/index.wiki ;}
@@ -2365,4 +2365,7 @@ gen-cron-trim() { sudo cp $PATH_SCRIPTS/trim /etc/cron.daily/ ;}
 alias pbcopy='xclip -selection clipboard'	# copy to clipboard, ctrl+c, ctrl+shift+c
 alias pbpaste='xclip -selection clipboard -o'	# paste from clipboard, ctrl+v, ctrl+shitt+v
 alias pbselect='xclip -selection primary -o'	# paste from highlight, middle click, shift+insert
+
+
+alias dog='src-hilite-lesspipe.sh'
 
