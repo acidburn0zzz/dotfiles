@@ -93,6 +93,7 @@ syntax on
 vmap <F6> :!xclip -f -sel clip<CR>
 map <F7> mz:-1r !xclip -o -sel clip<CR>`z
 
+
 "}}}
 "-------- running make and jumping to errors {{{
 "------------------------------------------------------
@@ -285,7 +286,27 @@ nnoremap ,z zMzvzz
 hi Folded cterm=bold ctermfg=DarkBlue ctermbg=none
 hi FoldColumn cterm=bold ctermfg=DarkBlue ctermbg=none
 "}}}
+"{{{ Functions
 
+" executes current line with xdg-open ( for use with mlocate )
+" demo video: https://www.youtube.com/watch?v=X0KPl5O006M
+" http://vim.wikia.com/wiki/Open_a_web-browser_with_the_URL_in_the_current_line
+" section 41.6 using functions http://vimdoc.sourceforge.net/htmldoc/usr_41.html
+" devnull https://code.google.com/p/vimwiki/issues/detail?id=401
+" put qoutes around line http://stackoverflow.com/a/3218805
+" bypass pressing Enter to continue with extra <CR> http://stackoverflow.com/a/890831
+
+function! OpenCurrentLine ()
+  " grab current line
+  let line = getline (".")
+  " add qoutes around the current line to avoid spaces/symbols issues
+  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
+  " open with default system app, no messy output msg
+  exec "!xdg-open" line '>&/dev/null &'
+endfunction
+  "bind function to a hotkey
+map <F8> :call OpenCurrentLine() <CR><CR>
+" }}}
 
 " Keep search matches in the middle of the window.
 nnoremap n nzzzv
@@ -346,5 +367,11 @@ augroup myvimrc
     au!
     au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
 augroup END
+
+
+
+
+
+
 
 
