@@ -26,7 +26,9 @@ export HISTTIMEFORMAT="%d/%m/%y %T "		#History list shows digital time and date
 #}}}
 #-------- My Variable {{{
 #------------------------------------------------------
+# set display
 export DISPLAY=:0
+
 # send process to the background
 background() { $1 $2 >/dev/null 2>&1 &! ;}
 
@@ -160,7 +162,7 @@ alias trash='trash-put'
 alias wget='wget -c'				# continues/resumes
 alias weechat='weechat-curses'
 alias youtube-viewer-dev='$PATH_BINARY/youtube-viewer/youtube-viewer -C -f -4 --results=10'
-alias youtube-viewer='youtube-viewer -C -f -4 --results=10'	# color, fullscreen, 480p, 10 results
+alias youtube-viewer='youtube-viewer -C -f -4 --results=15'	# color, fullscreen, 480p, number of results
 ## }}}
 #-------- Directory Shortcuts {{{
 #------------------------------------------------------
@@ -271,9 +273,6 @@ inxi() { $PATH_BINARY/inxi-1.8.26-1-any/usr/bin/inxi $@ ;}
 # d/l hentai manga from http://old.lu.scio.us
 lucious() { python2.7 $PATH_BINARY/Lucious-downloader/src/lucious.py $@ ;}
 
-# search and stream http://mp3skull.com/ with mplayer
-mp3skull() { $PATH_SCRIPTS/mp3skull.sh $@ ;}
-
 # http://rcf-group.com
 # read apps reviews via cli (from ubuntu software center)
 package-comments() { python2.7 $PATH_SCRIPTS/package_comments.py $@ ;}
@@ -313,15 +312,6 @@ shoutcast-tuner() { $PATH_SCRIPTS/shoutcast_tuner.sh ;}
 # catalog movies; generate html page
 simple-movie-catalog() { cd $PATH_BINARY/SimpleMovieCatalog; \
 	perl moviecat-pl -my -mf -origtitle -c config.txt ;}
-
-# search and stream adult videos with mplayer
-skeet-empflix() { $PATH_SCRIPTS/skeet-empflix.sh $@ ;}
-skeet-pornotube() { $PATH_SCRIPTS/skeet-pornotube.sh $@ ;}
-skeet-spankwire() { $PATH_SCRIPTS/skeet-spankwire.sh $@ ;}
-skeet-tnaflix() { $PATH_SCRIPTS/skeet-tnaflix.sh $@ ;}
-skeet-xvideos() { $PATH_SCRIPTS/skeet-xvideos.sh $@ ;}
-skeet-youjizz() { $PATH_SCRIPTS/skeet-youjizz.sh $@ ;}
-skeet-youporn() { $PATH_SCRIPTS/skeet-youporn.sh $@ ;}
 
 # https://github.com/ginatrapani/todo.txt-cli
 # todo list manager
@@ -373,6 +363,7 @@ cfg-aria2() { $EDITOR ~/.aria2/aria2.conf ;}
 cfg-bashrc() { $EDITOR ~/.bashrc ;}
 	rld-bashrc() { source ~/.bashrc ;}
 cfg-bitlbee() { sudo $EDITOR /etc/bitlbee/bitlbee.conf ;}
+cfg-blocklist() { $EDITOR $PATH_SCRIPTS/ipblocklist.sh ;}
 cfg-cantorc() { $EDITOR ~/.canto/conf.py ;}
 cfg-centerim-binds() { $EDITOR ~/.centerim5/binds.xmlEnter ;}
 # http://blog.dotsmart.net/2011/09/30/change-font-size-in-chrome-devtools/
@@ -396,6 +387,7 @@ cfg-fttps-settings() { $EDITOR $PATH_BINARY/fttps/fttpsettings.py ;}
 cfg-ghsync() { $EDITOR $PATH_SCRIPTS/ghsync-script.sh ;}
 cfg-gift-giftd() { $EDITOR ~/.giFT/giftd.conf ;}
 cfg-gift-ui() { $EDITOR ~/.giFT/ui/ui.conf ;}
+cfg-group() { sudo $EDITOR /etc/group ;}
 cfg-helpnotes() { $EDITOR ~/.aliases_helpnotes ;}
 cfg-hosts() { sudo $EDITOR /etc/hosts ;}
 cfg-inputrc() { $EDITOR ~/.inputrc ;}
@@ -429,6 +421,8 @@ cfg-pacman-mirrorlist() { sudo $EDITOR /etc/pacman.d/mirrorlist ;}
 #cfg-arch-rc() { sudo $EDITOR /etc/rc.conf ;}
 cfg-pastebinit() { $EDITOR ~/.pastebinit.xml ;}
 cfg-pianobar() { $EDITOR ~/.config/pianobar/config ;}
+	# alsa to pulse; https://bbs.archlinux.org/viewtopic.php?id=158070
+cfg-pianobar-libao() { sudo $EDITOR /etc/libao.conf ;}
 cfg-plowshare-depositfiles() { $EDITOR ~/.config/plowshare/depositfiles.txt ;}
 cfg-plowshare-netloadin() { $EDITOR ~/.config/plowshare/netloadin.txt ;}
 cfg-plowshare-rapidgator() { $EDITOR ~/.config/plowshare/rapidgator.txt ;}
@@ -451,12 +445,12 @@ cfg-sudoers() { sudo $EDITOR /etc/sudoers ;}
 cfg-sugarwalls() { $EDITOR ~/.notewiki/sugarwalls.txt ;}
 cfg-surfraw() { $EDITOR ~/.config/surfraw/conf ;}
 cfg-surfraw-bookmarks() { $EDITOR ~/.config/surfraw/bookmarks ;}
-cfg-surfraw-elvi() { $EDITOR ~/.config/surfraw/elvi ;}
 cfg-timidity() { sudo $EDITOR /etc/timidity++/timidity.cfg ;}
 cfg-tmuxrc() { $EDITOR ~/.tmux.conf ;}
 cfg-torrtux() { $EDITOR ~/.torrtuxrc ;}
 cfg-tpb() { $EDITOR $PATH_BINARY/shellscripts/thepiratebay_se/tpb.sh ;}
 cfg-transmission-daemon() { $EDITOR ~/.config/transmission-daemon/settings.json ;}
+cfg-transmission-ncurse() { $EDITOR ~/.config/transmission-remote-cli/settings.cfg ;}
 cfg-trz() { $EDITOR $PATH_BINARY/shellscripts/torrentz_eu/torrentz_eu.sh ;}
 cfg-turses() { $EDITOR ~/.turses/config ;}
 cfg-urlview() { $EDITOR ~/.urlview ;}
@@ -559,10 +553,15 @@ ytmp3() { youtube-dl -c --restrict-filenames --extract-audio --audio-format mp3 
 # call vim help page from shell prompt
 function :h { vim +":h $1" +'wincmd o' +'nnoremap q :q!<CR>' ;}
 
-# show manpage, help, or search manned.org with surfraw
-manned() { for arg in "$@"; do man $arg 2> /dev/null \
-	|| $arg -H 2> /dev/null || $arg --help-all 2> /dev/null || $arg --help 2> /dev/null \
-	|| sr manned $arg ; done;}
+# searches for manual locally or online
+rtfm() { for arg in "$@"; do man $arg 2> /dev/null \
+	|| $arg -H 2> /dev/null || $arg -h 2> /dev/null \
+	|| $arg --help-all 2> /dev/null || $arg --help 2> /dev/null \
+	|| help $arg 2> /dev/null \
+	|| $BROWSERCLI "http://manned.org/browse/search?q=$@" 2> /dev/null \
+	|| $BROWSER "http://manned.org/browse/search?q=$@" 2> /dev/null \
+	|| open "http://manned.org/browse/search?q=$@" 2> /dev/null \
+	|| xdg-open "http://manned.org/browse/search?q=$@" ; done ;}
 #}}}
 
 # CLI Appz {{{
@@ -593,7 +592,6 @@ cmx-eurotica() { calibredb ${@:-list} --library-path ~/.calibre/Eurotica ;}
 cmx-hanime() { calibredb ${@:-list} --library-path ~/.calibre/Hanime ;}
 cmx-normal() { calibredb ${@:-list} --library-path ~/.calibre/Normal ;}
 cmx-textbook() { calibredb ${@:-list} --library-path ~/.calibre/Textbook ;}
-
 
 # list available recipes for fetch news 
 cmx-recipes() { ebook-convert --list-recipes | less ;}
@@ -682,7 +680,7 @@ fi
 
 FFX_MONO="1"		# mono
 FFX_DUAL="2"		# dual channel
-FFX_HW="hw:1,0" 	# alsa, run 'cat /proc/asound/pcm' to find the shit for u
+FFX_HW="hw:0,0" 	# alsa, run 'cat /proc/asound/pcm' to find the shit for u
 FFX_PULSE="pulse" 	# pulseaudio; might have to install pavucontrol to change volume
 FFX_FPS="30"		# frame per seconds
 FFX_WIN_FULL=$(xwininfo -root | grep 'geometry' |awk '{print $2;}') # record fullscreen
@@ -725,7 +723,6 @@ ffx-winselect-hw() {
 	| grep -oEe '[0-9]+\+[0-9]+' | sed -e 's/\+/,/' ) \
 	-acodec $FFX_AUDIO -vcodec $FFX_VIDEO \
        	-preset $FFX_PRESET -crf $FFX_CRF -threads $FFX_THREADS \
-	-vf $FFX_SCALE \
 	-y $FFX_OUTPUT
 }
 #pulse
@@ -740,10 +737,12 @@ ffx-winselect-pa() {
 	| grep -oEe '[0-9]+\+[0-9]+' | sed -e 's/\+/,/' ) \
 	-acodec $FFX_AUDIO -vcodec $FFX_VIDEO \
        	-preset $FFX_PRESET -crf $FFX_CRF -threads $FFX_THREADS \
-	-vf $FFX_SCALE \
 	-y $FFX_OUTPUT
 }
 #}}}
+
+
+
 #-------- Flexget {{{
 #------------------------------------------------------
 # demo video: http://www.youtube.com/playlist?list=PLqv94xWU9zZ0pVGrgKtMuhFHun8-MahSY
@@ -810,6 +809,13 @@ tsm-clearcompleted() {
         transmission-remote -l | grep 100% | grep Done | \
         awk '{print $1}' | xargs -n 1 -I % transmission-remote -t % -r ;}
 tsm() { transmission-remote --list ;}
+	# numbers of ip being blocked by the blocklist
+	# credit: smw from irc #transmission
+tsm-count() { echo "Blocklist rules:" $(curl -s --data \
+	'{"method": "session-get"}' localhost:9091/transmission/rpc -H \
+	"$(curl -s -D - localhost:9091/transmission/rpc | grep X-Transmission-Session-Id)" \
+	| cut -d: -f 11 | cut -d, -f1) ;}
+tsm-blocklist() { $PATH_SCRIPTS/ipblocklist.sh ;}		# update blocklist
 tsm-daemon() { transmission-daemon ;}
 tsm-quit() { killall transmission-daemon ;}
 tsm-altspeedenable() { transmission-remote --alt-speed ;}	# limit bandwidth
@@ -833,9 +839,10 @@ tsm-ncurse() { transmission-remote-cli ;}
 # demo video: http://www.youtube.com/watch?v=FnJ67oAxVQ4
 # watch/login/comment/search/download...etc video on youtube, all from cli 
 # https://github.com/trizen/youtube-viewer
-youtube-listen() { youtube-viewer -n $@ ;}	# no video, music/audio only
+yt-listen() { youtube-viewer -n $@ ;}	# no video, music/audio only
+yt-music() { youtube-viewer -n --category=Music --top ;}	# show top music list
 yts-amcmovietalk() { youtube-viewer -p PLBFB97E5B9494EEBD ;}
-yts-amcmovietalk-mailbag() { youtube-viewer -p PLYNW0PN4_jrpc3rJyVPjep1MjAABedBSJ ;}
+yts-amcmovietalk-mailbag() { youtube-viewer -p PLYNW0PN4_jrqlBqzAVRv3rfpo6nhzJnKp ;}
 yts-alwayson() { youtube-viewer "Always On" --author=CNETTV --orderby=published --duration=long ;}
 yts-btt-beyondthetrailer() { youtube-viewer -u beyondthetrailer ;}
 yts-btt-thinkabouttheink() { youtube-viewer -u thinkabouttheink ;}
@@ -1153,33 +1160,29 @@ ilt-sports-wwe() { iliveto "uk6s32lz5flsy0h" ;} #2/8/13 http://ppvdirect.com/  P
 #}}}
 #-------- Internet Videos - Justin.tv {{{
 #------------------------------------------------------
-JTVP() { livestreamer -p mplayer http://www.justin.tv/"$1" best ;}
-jtv-ani-animemovies() { JTVP bellpepps ;}
-jtv-ani-bleach() { JTVP jordford ;}
-jtv-ani-dragonball() { JTVP yungboss_hd ;}
-jtv-ani-dragonballz() { JTVP dbz_hd2 ;}
-jtv-ani-futurama() { JTVP benderisgreat338 ;}
-jtv-ani-narutohd() { JTVP naruto_hd ;}
-jtv-ani-pokemon() { JTVP alittleoddish ;}
-jtv-doc-bbcnatgeo() { JTVP fam_nature ;}
-jtv-shows-ancientaliens() { JTVP bob_2012 ;}
-jtv-shows-crimecentral() { JTVP crime_central ;}
-jtv-shows-criminalminds() { JTVP lurking_in_the_dark8 ;}
-jtv-shows-frasier() { JTVP highspothorror231 ;}
-jtv-shows-kingofqueens() { JTVP secondkoq ;}
-jtv-shows-marriedwithchildren() { JTVP mwconjtv ;}
-jtv-shows-mythbusters() { JTVP mythbusters21 ;}
-jtv-shows-psych() { JTVP highspothorror214 ;}
-jtv-shows-seinfeld() { JTVP highspothorror236 ;}
-jtv-shows-simpsons() { JTVP arconai_228 ;}
-jtv-shows-that70sshow() { JTVP highspothorror128 ;}
-jtv-shows-thewire() { JTVP winning_the_madness ;}
+JTVM() { livestreamer -p mplayer http://www.justin.tv/"$1" best ;}
+JTVP() {
+	grepmatch=$(echo "$@" | sed 's/ /.*/g')
+        keyword="$(echo "http://www.justin.tv/directory/$@")"
+	pagenum=6
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo "$keyword?lang=en&page=$num"; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -source "$line" \
+	| sed -n '/class\=\"title\"/,/<\/a>/p' | awk 'NR%3 != 0' | sed 'N;s/\n/,/' \
+	| awk -F\" '{print $5,"\n","http://www.justin.tv"$2}' |  sed -e 's/[>,]//g' -e 's/^[ \t]*//' ; done)
+
+	echo $videourl | vim -R -
+}
+jtv-ent() { JTVP "entertainment" ;}
+jtv-ent-doc() { JTVP "entertainment/documentary" ;}
+jtv-ent-music() { JTVP "entertainment/music" ;}
+jtv-ent-series() { JTVP "entertainment/series" ;}
 
 #}}}
 #-------- Internet Videos - Tgun.tv {{{
 #------------------------------------------------------
 # http://tgun.tv/ppv/?page_id=10066
-tguntv() { rtmpdump -r "rtmp://142.4.219.190/app" -a "app" -f "LNX 11,2,202,261" -W "http://www.owncast.me/player/player.swf" -p "http://www.owncast.me/embed.php?channel=1806&vw=600&vh=530&domain=tgun.tv" -y "$1" | mplayer - ;}
+# http://www.giddyupnetwork.info/pages/live-shows-movies-
+tguntv() { rtmpdump -r "rtmp://198.27.74.25/app" -a "app" -f "LNX 11,2,202,285" -W "http://www.tgun.tv/jwplayer/player.swf" -p "http://www.tgun.tv/menus/players/playerindex.php?seinfeld" -y "$1" | mplayer - ;}
 tgtv-shows-seinfeld() { tguntv "seinfeld" ;}
 tgtv-shows-curbyourenthusiasm() { tguntv "curbs" ;}
 tgtv-shows-boymeetsworld() { tguntv "bmw" ;}
@@ -1217,6 +1220,127 @@ tgtv-shows-breakingbad() { tguntv "bad" ;}
 tgtv-shows-alwayssunnyinphiladelphia() { tguntv "sunny" ;}
 
 
+#}}}
+#-------- Internet Videos - Porn {{{
+#------------------------------------------------------
+# youtube-dl
+fap-uporn() {# {{{
+	grepmatch=$(echo "$@" | sed 's/ /.*/g')
+        keyword="$(echo "http://www.youporn.com/search?query=$@&type=straight" | sed 's/ /\+/g')"
+	pagenum=3
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo "$keyword&page=$num"; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -dump "$line" \
+	| awk '/watch/ {print $2}' | cut -d\/ -f1-6 | grep -iE $grepmatch | awk '!x[$0]++' ; done)
+
+	echo $videourl | sed 's/\ /\n/g' | awk '!x[$0]++' | vim -R -
+}# }}}
+fap-ujizz() {# {{{
+        keyword="$(echo "http://www.youjizz.com/search/$@" | sed 's/ /\-/g')"
+	pagenum=5
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo "$keyword-$num".html""; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -dump "$line" \
+	| awk '/\.com\/videos/ {print $2}' | awk '!x[$0]++' ; done)
+	
+	echo $videourl | sed 's/\ /\n/g' | awk '!x[$0]++' | vim -R -
+}
+# }}}
+fap-pornotube() {# {{{
+        keyword="$(echo "http://www.pornotube.com/search.php?q=$@" | sed 's/ /\+/g')"
+	pagenum=3
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo "$keyword&page=$num"; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do	curl -s "$line" \
+	| awk '/pornotube.com\/m/ && !/class/' | cut -d\" -f 2 | awk '!x[$0]++' ; done)
+
+	echo $videourl | sed 's/\ /\n/g' | awk '!x[$0]++' | vim -R -
+}
+# }}}
+fap-xvideos() {# {{{
+        keyword="$(echo "http://www.xvideos.com/?k=$@" | sed 's/ /\+/g')"
+	pagenum=5
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo "$keyword&p=$num"; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -dump "$line" \
+	| awk '/xvideos\.com\/video/ {print $2}' | awk '!x[$0]++' ; done)
+
+	echo $videourl | sed 's/\ /\n/g' | awk '!x[$0]++' | vim -R -
+}
+# }}}
+fap-jizzhut() {# {{{
+        keyword="$(echo "http://www.jizzhut.com/search/$@" | sed 's/ /\-/g')"
+	pagenum=3
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo "$keyword-$num.html"; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -dump "$line" \
+	| awk '/jizzhut\.com\/videos/ {print $2}' | awk '!x[$0]++' ; done)
+
+	echo $videourl | awk '!x[$0]++' | vim -R -
+}
+# }}}
+fap-redtube() {# {{{
+        keyword="$(echo "http://www.redtube.com/?search=$@" | sed 's/ /\+/g')"
+	pagenum=3
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo "$keyword&page=$num"; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -source "$line" \
+	| awk -F\" '/class="s"/ {print $4, "http://redtube.com"$2}' | awk '!x[$0]++' ; done)
+
+	echo $videourl | awk '!x[$0]++' | vim -R -
+}
+# }}}
+# quvi
+fap-tnaflix() {# {{{
+        keyword="$(echo "&what=$@&category=&sb=relevance&su=anytime&sd=all&dir=desc" | sed 's/ /\%20/g')"
+	pagenum=3
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo \
+		"http://www.tnaflix.com/search.php?page=$num$keyword"; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -dump "$line" \
+	| awk '/video[0-9]/ {print $2}' | awk '!x[$0]++' ; done)
+
+	echo $videourl | sed 's/\ /\n/g' | vim -R -
+}# }}}
+fap-empflix() {# {{{
+        keyword="$(echo "&what=$@&category=&sb=relevance&su=anytime&sd=all&dir=desc" | sed 's/ /\%20/g')"
+	pagenum=3
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo \
+		"http://www.empflix.com/search.php?page=$num$keyword"; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -dump "$line" \
+	| awk '/empflix\.com\/videos/ {print $2}' | awk '!x[$0]++' ; done)
+
+	echo $videourl | sed 's/\ /\n/g' | vim -R -
+}
+# }}}
+fap-spankwire() {# {{{
+        keyword="$(echo "http://www.spankwire.com/search/straight/keyword/$@" | sed 's/ /\%20/g')"
+	pagenum=5
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo "$keyword?Sort=Relevance&Page=$num"; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -dump "$line" \
+	| awk '/www\.spankwire\.com/ && /video/ {print $2}' | awk '!x[$0]++' ; done)
+
+	echo $videourl | sed 's/\ /\n/g' | vim -R -
+}
+# }}}
+
+pornhub-dl() {# {{{
+	url=$(lynx --source "$1" | grep cdn1b \
+	| cut -d\, -f4 | cut -d\: -f2 | cut -d\" -f1-2 | cut -d\" -f2 | head -1 \
+	| sed 's/%3A/:/g' | sed 's:%2F:/:g' | sed 's:%3F:?:g' |sed 's:%3D:=:g' | sed 's:%26:\&:g')
+
+	videotitle=$(lynx --source "$1" | grep "tumblr_video_caption =" | cut -d\" -f2)
+	videoextension=$(echo $url | cut -d\? -f1 | rev | cut -d\. -f1 |rev)
+
+	wget "$url" -O "$videotitle"."$videoextension"
+}
+
+# useage: xxx-dl http://www.youporn.com/watch/388214/incredible-blonde-gets-fucked-and-creamed
+xxx-dl() {
+	# checks if links is valid then dl from supported sites
+	if [[ "$1" == *pornhub.com* ]]; then
+		pornhub-dl "$1"
+	else
+		if [[ "$1" == *youporn.com* ]]; then
+			youporn-dl "$1"
+		else
+   		echo "Link not valid"
+		fi
+	fi
+}# }}}
 #}}}
 #-------- IPTV {{{
 #------------------------------------------------------
@@ -1334,12 +1458,14 @@ if [ "$PKMGR" = "apt-get" ]; then
 	pkm-dependsreverse() { apt-cache rdepends "$@" ;}
 	pkm-download() { wget $(apt-get --print-uris -y install "$@" | grep ^\'| cut -d\' -f2) ;}
 	pkm-extract() { ar vx "$@" | tar -zxvf data.tar.gz ;}
-	pkm-hold() { sudo apt-mark hold "$@" ;} # same as; echo "pkgname hold" | dpkg --set-selections
+	# same as; echo "pkgname hold" | dpkg --set-selections
+	pkm-hold() { sudo apt-mark hold "$@" ;}
 	pkm-hold-status() { dpkg --get-selections | awk "/${@:-hold}/" ;}
         pkm-info() { apt-cache show "$@" ;}
         pkm-install() { sudo apt-get install --no-install-recommends "$@" ;}
 	pkm-list() { dpkg -L "$@" ;}
-	pkm-listcache() { ls -1 /var/cache/apt/archives "$@" && echo "pwd: /var/cache/apt/archives" ;}
+	pkm-listcache() { ls -1 /var/cache/apt/archives "$@" && \
+		echo "pwd: /var/cache/apt/archives" ;}
         pkm-localinstall() { sudo dpkg -i "$@" ;}
 	pkm-own() { dpkg -S $(which "$@") ;}
         pkm-purge() { sudo apt-get purge "$@" ;}
@@ -1383,7 +1509,8 @@ elif [ "$PKMGR" = "aptitude" ]; then
         pkm-info() { aptitude show "$@" ;}
         pkm-install() { sudo aptitude install --without-recommends "$@" ;}
 	pkm-list() { dpkg -L "$@" ;}
-	pkm-listcache() { ls -1 /var/cache/apt/archives "$@" && echo "pwd: /var/cache/apt/archives" ;}
+	pkm-listcache() { ls -1 /var/cache/apt/archives "$@" && \
+		echo "pwd: /var/cache/apt/archives" ;}
         pkm-localinstall() { sudo dpkg -i "$@" ;}
 	pkm-own() { dpkg -S $(which "$@") ;}
         pkm-purge() { sudo aptitude purge "$@" ;}
@@ -1437,7 +1564,8 @@ elif [ "$PKMGR" = "pacman" ]; then
 		&& sudo pacman-key --populate archlinux \
 		&& sudo pacman-key --refresh-keys ;}
 	pkm-list() { pacman -Qql "$@" ;}
-	pkm-listcache() { ls -1 /var/cache/pacman/pkg "$@" && echo "pwd: /var/cache/pacman/pkg" ;}
+	pkm-listcache() { ls -1 /var/cache/pacman/pkg "$@" && \
+		echo "pwd: /var/cache/pacman/pkg" ;}
 	pkm-localinstall() { sudo pacman --noconfirm -U "$@" ;}
 	pkm-own() { pacman -Qo "$@" ;}
         pkm-purge() { sudo pacman -R "$@" ;}
@@ -1477,7 +1605,8 @@ elif [ "$PKMGR" = "yaourt" ]; then
 		&& sudo pacman-key --populate archlinux \
 		&& sudo pacman-key --refresh-keys ;}
 	pkm-list() { yaourt -Qql "$@" ;}
-	pkm-listcache() { ls -1 /var/cache/pacman/pkg "$@" && echo "pwd: /var/cache/pacman/pkg" ;}
+	pkm-listcache() { ls -1 /var/cache/pacman/pkg "$@" && \
+		echo "pwd: /var/cache/pacman/pkg" ;}
 	pkm-localinstall() { sudo pacman --noconfirm -U "$@" ;}
 	pkm-own() { pacman -Qo "$@" ;}
 	pkm-purge() { yaourt -R "$@" ;}
@@ -1538,12 +1667,11 @@ alias pbdump='pbpaste | pastebinit | pbcopy'	# dump text to pastebin server
 
 # take screenshot fullscreen, single window or draw a box
 # demo video: http://www.youtube.com/watch?v=Hh8G1aBp8gc
-pix() { scrot -d 2 "$PATH_SCREENSHOT/fullscr_`date +'%F_%Hh%M'`.png" ;}
-pix-winarea() { sleep 2 && scrot -s "$PATH_SCREENSHOT/windowed_`date +'%F_%Hh%M'`.png" ;}
-
+pix() { scrot -d 2 "$PATH_SCREENSHOT/fullscr_`date +'%F_%Hh%Ms%S'`.png" ;}
+pix-winarea() { sleep 2 && scrot -s "$PATH_SCREENSHOT/windowed_`date +'%F_%Hh%Ms%S'`.png" ;}
 # take screenshot ( method 2 )
-pixx() { import -pause 2 -window root "$PATH_SCREENSHOT/fullscr_`date +'%F_%Hh%M'`.png" ; }
-pixx-winarea() { import -pause 2 "$PATH_SCREENSHOT/windowed_`date +'%F_%Hh%M'`.png" ;}
+pixx() { import -pause 2 -window root "$PATH_SCREENSHOT/fullscr_`date +'%F_%Hh%Ms%S'`.png" ; }
+pixx-winarea() { import -pause 2 "$PATH_SCREENSHOT/windowed_`date +'%F_%Hh%Ms%S'`.png" ;}
 #screenshot-window() { import -pause 2 -frame -strip -quality 75 "$HOME/Pictures/Screenshots/pscreen-win_`date +'%F_%Hh%M'`.png" ;}
 
 
@@ -2491,40 +2619,6 @@ On_IWhite='\e[0;107m'   # White
 #	fi
 #}
 #}}}
-#-------- Porn Downloader {{{
-#------------------------------------------------------
-#youporn-dl() {
-#	url=$(lynx -dump "$1" | grep mp4 | head -1 | awk '{print $2}')
-#	videotitle=$( echo "$1" | cut -d\/ -f6 | sed 's/-/ /g')
-#	videoextension=$(echo $url | cut -d\? -f1 |rev | cut -d\. -f1 |rev )
-#	wget "$url" -O "$videotitle"."$videoextension"
-#}
-#
-#pornhub-dl() {
-#	url=$(lynx --source "$1" | grep cdn1b \
-#	| cut -d\, -f4 | cut -d\: -f2 | cut -d\" -f1-2 | cut -d\" -f2 | head -1 \
-#	| sed 's/%3A/:/g' | sed 's:%2F:/:g' | sed 's:%3F:?:g' |sed 's:%3D:=:g' | sed 's:%26:\&:g')
-#
-#	videotitle=$(lynx --source "$1" | grep "tumblr_video_caption =" | cut -d\" -f2)
-#	videoextension=$(echo $url | cut -d\? -f1 | rev | cut -d\. -f1 |rev)
-#
-#	wget "$url" -O "$videotitle"."$videoextension"
-#}
-#
-## useage: xxx-dl http://www.youporn.com/watch/388214/incredible-blonde-gets-fucked-and-creamed
-#xxx-dl() {
-#	# checks if links is valid then dl from supported sites
-#	if [[ "$1" == *pornhub.com* ]]; then
-#		pornhub-dl "$1"
-#	else
-#		if [[ "$1" == *youporn.com* ]]; then
-#			youporn-dl "$1"
-#		else
-#    		echo "Link not valid"
-#		fi
-#	fi
-#}
-#}}}
 #-------- Disc Burning CLI {{{
 #------------------------------------------------------
 # usage: dbx-burniso file.iso -- burn iso to cdr/dvdr
@@ -2573,4 +2667,34 @@ lynx -dump https://aur.archlinux.org/packages/$1/?comments=all | grep --max-coun
 showbookmarks() { awk 'NF != 0 && !/#/ {print $1}' ~/.config/surfraw/bookmarks | sort -n ;}
 
 # Guake - Change Font Size
-chfontsize() { gconftool-2 --set '/apps/guake/style/font/style' --type string "Monospace ${1:-20}" ;}
+chfontsize() { gconftool-2 --set '/apps/guake/style/font/style' --type string "Monospace ${1:-12}" ;}
+
+
+
+#http://nowardev.wordpress.com/2013/06/11/how-to-screencast-with-vlc-using-shell-on-linux-kububuntu-cvlc-with-microphone/
+vlc-record() { 
+cvlc screen:// --screen-fps=12 --input-slave=alsa://hw:0,0 --sout "#transcode{venc=libx264,quality:100,scale=1,fps=30,acodec=mp4a,ab=128,channels=2, samplerate=44100}:duplicate{dst=std{access=file,mux=mp4,dst=desktop.mp4}}}"
+}
+
+
+get-password() { 
+w3m -dump "$1" | awk '/\:/' | awk '!/^http/ && !/\ / && !/\./ && !/\[/ && !/\]/' | sort -u >> /tmp/pass.txt
+}
+
+get-proxies() { 
+w3m -dump "$1" | awk '/\:/ && /[0-9]/ && !/\ /' | sort -u >> /tmp/proxies.txt
+}
+
+
+
+mp3skull() {
+        keyword="$(echo "http://mp3skull.com/mp3/$@.html" | sed 's/ /\_/g')"
+	music_url=$(lynx -source "$keyword" | awk '/href/ && /\.mp3/' \
+		| cut -d\" -f4 | sed 's/ /\%20/g' | awk '!x[$0]++')
+
+	echo $music_url | sed 's/\ /\n/g' | sed 's/\%20/ /g' | vim -R -
+}
+
+# mplayer to display webcam; hit 's' to take screenshot
+# https://wiki.archlinux.org/index.php/Webcam_Setup#MPlayer
+webcam-mplayer() { mplayer tv:// -tv driver=v4l2:width=640:height=480:device=/dev/video0 -fps 15 -vf screenshot ;}

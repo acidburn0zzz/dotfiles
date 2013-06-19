@@ -18,8 +18,8 @@ filetype plugin indent on		" enable detection, plugin, indenting
 " vimwiki
 " http://www.vim.org/scripts/script.php?script_id=2226
 " requirements for it to work
-set nocompatible 
-"filetype plugin on 
+set nocompatible
+"filetype plugin on
 syntax on
 
 "}}}
@@ -67,6 +67,18 @@ syntax on
 "}}}
 "-------- folding {{{
 "------------------------------------------------------
+" http://vim.wikia.com/wiki/Folding
+
+" code folding; using 3 open/closing braces
+set foldmethod=marker
+"set foldmethod=indent
+
+"Refocus folds; close any other fold except the one that you are on
+nnoremap ,z zMzvzz
+
+" fold color
+hi Folded cterm=bold ctermfg=DarkBlue ctermbg=none
+hi FoldColumn cterm=bold ctermfg=DarkBlue ctermbg=none
 "}}}
 "-------- diff mode {{{
 "------------------------------------------------------
@@ -92,6 +104,105 @@ syntax on
 " 	hit F7 to paste from GUI to vim without formating issues
 vmap <F6> :!xclip -f -sel clip<CR>
 map <F7> mz:-1r !xclip -o -sel clip<CR>`z
+
+" executes current line with xdg-open ( for use with mlocate )
+" demo video: https://www.youtube.com/watch?v=X0KPl5O006M
+" http://vim.wikia.com/wiki/Open_a_web-browser_with_the_URL_in_the_current_line
+" section 41.6 using functions http://vimdoc.sourceforge.net/htmldoc/usr_41.html
+" devnull https://code.google.com/p/vimwiki/issues/detail?id=401
+" put qoutes around line http://stackoverflow.com/a/3218805
+" bypass pressing Enter to continue with extra <CR> http://stackoverflow.com/a/890831
+
+function! OpenCurrentLine ()
+  " grab current line
+  let line = getline (".")
+  " add qoutes around the current line to avoid spaces/symbols issues
+  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
+  " open with default system app, no messy output msg
+  exec "!xdg-open" line '>&/dev/null &'
+endfunction
+  "bind function to a hotkey
+map <F8> :call OpenCurrentLine() <CR><CR>
+
+" http://www.unix.com/unix-dummies-questions-answers/6025-extract-last-word-line-new-file.html
+" mplayer with youporn, youjizz, pornotube, xvideos
+function! OpenYTDL ()
+  " grab current line
+  let line = getline (".")
+  " grab links only; remove other words
+  let line = substitute(line, '[-?,a-zA-Z0-9]* ', '', "g")
+  " add qoutes around the current line to avoid spaces/symbols issues
+  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
+  " add youtube-dl:  $(youtube-dl -g line)
+  let line = substitute(line, '^\(.*\)$', '\$\(youtube-dl\ -g\ \1\)', "g")
+  " stream with mplayer
+  exec "!mplayer" line
+endfunction
+  "bind function to a hotkey
+map <leader>yt :call OpenYTDL() <CR><CR>
+
+
+function! OpenQuvi ()
+  " grab current line
+  let line = getline (".")
+  " grab links only; remove other words
+  let line = substitute(line, '[-?,a-zA-Z0-9]* ', '', "g")
+  " add qoutes around the current line to avoid spaces/symbols issues
+  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
+  " stream with mplayer
+  exec '!quvi --exec "mplayer \%u"' line
+endfunction
+  "bind function to a hotkey
+map <leader>qv :call OpenQuvi() <CR><CR>
+
+function! OpenCCLive ()
+  " grab current line
+  let line = getline (".")
+  " grab links only; remove other words
+  let line = substitute(line, '[-?,a-zA-Z0-9]* ', '', "g")
+  " add qoutes around the current line to avoid spaces/symbols issues
+  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
+  " stream with mplayer
+  exec '!cd ~/Downloads; cclive' line
+endfunction
+  "bind function to a hotkey
+map <leader>cc :call OpenCCLive() <CR><CR>
+
+function! OpenLivestreamer ()
+  " grab current line
+  let line = getline (".")
+  " grab links only; remove other words
+  let line = substitute(line, '[-?,a-zA-Z0-9]* ', '', "g")
+  " add qoutes around the current line to avoid spaces/symbols issues
+  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
+  " stream with mplayer
+  exec '!livestreamer -p mplayer' line 'best'
+endfunction
+  "bind function to a hotkey
+map <leader>ls :call OpenLivestreamer() <CR><CR>
+
+function! OpenWget ()
+  " grab current line
+  let line = getline (".")
+  " add qoutes around the current line to avoid spaces/symbols issues
+  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
+  " download with wget
+  exec '!cd ~/Downloads; wget -c' line
+endfunction
+  "bind function to a hotkey
+map <leader>wg :call OpenWget() <CR><CR>
+
+
+function! OpenMplayer ()
+  " grab current line
+  let line = getline (".")
+  " add qoutes around the current line to avoid spaces/symbols issues
+  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
+  " stream with mplayer
+  exec '!mplayer' line
+endfunction
+  "bind function to a hotkey
+map <leader>mp :call OpenMplayer() <CR><CR>
 
 
 "}}}
@@ -158,8 +269,6 @@ nmap <C-N><C-N> :set invnumber<CR>
 " toggle paste mode
 " http://simon.xn--schnbeck-p4a.dk/vim-paste-indent-problems/
 set pastetoggle=<F10> " in insert mode, enable pasting
-
-
 
 
 " clear matching after search
@@ -272,41 +381,6 @@ set lbr
 nnoremap k gk
 nnoremap j gj
 "}}}
-"{{{ Folding
-" http://vim.wikia.com/wiki/Folding
-
-" code folding; using 3 open/closing braces
-set foldmethod=marker
-"set foldmethod=indent
-
-"Refocus folds; close any other fold except the one that you are on
-nnoremap ,z zMzvzz
-
-" fold color
-hi Folded cterm=bold ctermfg=DarkBlue ctermbg=none
-hi FoldColumn cterm=bold ctermfg=DarkBlue ctermbg=none
-"}}}
-"{{{ Functions
-
-" executes current line with xdg-open ( for use with mlocate )
-" demo video: https://www.youtube.com/watch?v=X0KPl5O006M
-" http://vim.wikia.com/wiki/Open_a_web-browser_with_the_URL_in_the_current_line
-" section 41.6 using functions http://vimdoc.sourceforge.net/htmldoc/usr_41.html
-" devnull https://code.google.com/p/vimwiki/issues/detail?id=401
-" put qoutes around line http://stackoverflow.com/a/3218805
-" bypass pressing Enter to continue with extra <CR> http://stackoverflow.com/a/890831
-
-function! OpenCurrentLine ()
-  " grab current line
-  let line = getline (".")
-  " add qoutes around the current line to avoid spaces/symbols issues
-  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
-  " open with default system app, no messy output msg
-  exec "!xdg-open" line '>&/dev/null &'
-endfunction
-  "bind function to a hotkey
-map <F8> :call OpenCurrentLine() <CR><CR>
-" }}}
 
 " Keep search matches in the middle of the window.
 nnoremap n nzzzv
@@ -325,7 +399,7 @@ nnoremap <silent> <leader>h2 :execute '2match InterestingWord2 /\<<c-r><c-w>\>/'
 nnoremap <silent> <leader>h3 :execute '3match InterestingWord3 /\<<c-r><c-w>\>/'<cr>
 
 " Clean trailing whitespace
-nnoremap <leader>w mz:%s/\s\+$//<cr>:let @/=''<cr>`z
+nnoremap <leader>W mz:%s/\s\+$//<cr>:let @/=''<cr>`z
 
 " Change case
 inoremap <C-u> <esc>mzgUiw`za
@@ -346,7 +420,7 @@ map <F3> :%s!<!\&lt;!g\|:%s!>!\&gt;!g<CR>
 
 
 " reopen file where you left off at
-" http://stackoverflow.com/questions/774560/in-vim-how-do-i-get-a-file-to-open-at-the-same-line-number-i-closed-it-at-last
+" http://stackoverflow.com/questions/774560
 " make sure to have permissions to ~/.viminfo if it doesnt work
 " sudo chown user:group ~/.viminfo
 " where user is your username and group is often the same as your username
@@ -360,18 +434,13 @@ augroup END
 
 
 
+" source vimrc manually
+map <leader>so :source ~/.vimrc<CR>
 
-" watch for changes then auto reload vimrc
-" http://superuser.com/a/417997
+" watch for changes then auto source vimrc
+" http://stackoverflow.com/a/2403926
 augroup myvimrc
     au!
     au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
 augroup END
-
-
-
-
-
-
-
 

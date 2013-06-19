@@ -2,24 +2,24 @@
 ! to reload
 ! xrdb -load ~/.Xresources
 ! {{{ YeahConsole Settings
+!!yeahconsole*term:xterm
 !yeahconsole*term:xterm
-yeahconsole*term:xterm
-yeahconsole*consoleHeight:25
-yeahconsole*toggleKey:None+grave
-yeahconsole*keyFull:Control+grave
-yeahconsole*background:#000000
-yeahconsole*foreground:#E6E3E6
-yeahconsole*cursorColor:#E6E3E6
-yeahconsole*transparent:true
-yeahconsole*shading:40
-yeahconsole*restart:1
-yeahconsole*faceName:Terminus:style=Regular:size=18
-yeahconsole*metaSendsEscape:true
-yeahconsole*aniDelay: 0
+!yeahconsole*consoleHeight:25
+!yeahconsole*toggleKey:None+grave
+!yeahconsole*keyFull:Control+grave
+!yeahconsole*background:#000000
+!yeahconsole*foreground:#E6E3E6
+!yeahconsole*cursorColor:#E6E3E6
+!yeahconsole*transparent:true
+!yeahconsole*shading:40
+!yeahconsole*restart:1
+!yeahconsole*faceName:Terminus:style=Regular:size=18
+!yeahconsole*metaSendsEscape:true
+!yeahconsole*aniDelay: 0
 ! }}}
 ! {{{ Xterm Settings
-xterm*transparent:true
-xterm*shading:40
+!xterm*transparent:true
+!xterm*shading:40
 ! }}}
 ! {{{ Tango Color Theme URxvt
 !URxvt*color0:  rgb:2e2e/3434/3636
@@ -58,25 +58,25 @@ xterm*shading:40
 !xterm*color15: rgb:eeee/eeee/ecec
 ! }}}
 ! {{{ Molokai theme xterm
-*xterm*background: #101010
-*xterm*foreground: #d0d0d0
-*xterm*cursorColor: #d0d0d0
-*xterm*color0: #101010
-*xterm*color1: #960050
-*xterm*color2: #66aa11
-*xterm*color3: #c47f2c
-*xterm*color4: #30309b
-*xterm*color5: #7e40a5
-*xterm*color6: #3579a8
-*xterm*color7: #9999aa
-*xterm*color8: #303030
-*xterm*color9: #ff0090
-*xterm*color10: #80ff00
-*xterm*color11: #ffba68
-*xterm*color12: #5f5fee
-*xterm*color13: #bb88dd
-*xterm*color14: #4eb4fa
-*xterm*color15: #d0d0d0
+!*xterm*background: #101010
+!*xterm*foreground: #d0d0d0
+!*xterm*cursorColor: #d0d0d0
+!*xterm*color0: #101010
+!*xterm*color1: #960050
+!*xterm*color2: #66aa11
+!*xterm*color3: #c47f2c
+!*xterm*color4: #30309b
+!*xterm*color5: #7e40a5
+!*xterm*color6: #3579a8
+!*xterm*color7: #9999aa
+!*xterm*color8: #303030
+!*xterm*color9: #ff0090
+!*xterm*color10: #80ff00
+!*xterm*color11: #ffba68
+!*xterm*color12: #5f5fee
+!*xterm*color13: #bb88dd
+!*xterm*color14: #4eb4fa
+!*xterm*color15: #d0d0d0
 ! }}}
 ! {{{ Xterm Paste Hotkeys
 ! http://blog.ssokolow.com/archives/2011/05/01/modernizing-xterms-paste/
@@ -111,25 +111,112 @@ xterm*shading:40
 ! http://yorikvanhavre.deviantart.com/art/urxvt-tango-theme-113968183
 !urxvt*foreground: #f2f2f2
 !urxvt*background: #101010
-urxvt*color0: #101010
-urxvt*color1: #f13a21
-urxvt*color2: #93f91d
-urxvt*color3: #ffd00a
-urxvt*color4: #004f9e
-urxvt*color5: #ec0048
-urxvt*color6: #2aa7e7
-urxvt*color7: #f2f2f2
-urxvt*color8: #1d202f
-urxvt*color9: #ff361e
-urxvt*color10: #ffc005
-urxvt*color11: #93ff00
-urxvt*color12: #0071ff
-urxvt*color13: #ef0051
-urxvt*color14: #4bb8fd
-urxvt*color15: #a020f0
-!urxvt*transparent: true
-urxvt*shading: 50
-urxvt*fading: 50
-urxvt*font: xft:Bitstream\ Vera\ Sans\ Mono:style=roman:pixelsize=16
-urxvt*scrollBar: false
+!urxvt*color0: #101010
+!urxvt*color1: #f13a21
+!urxvt*color2: #93f91d
+!urxvt*color3: #ffd00a
+!urxvt*color4: #004f9e
+!urxvt*color5: #ec0048
+!urxvt*color6: #2aa7e7
+!urxvt*color7: #f2f2f2
+!urxvt*color8: #1d202f
+!urxvt*color9: #ff361e
+!urxvt*color10: #ffc005
+!urxvt*color11: #93ff00
+!urxvt*color12: #0071ff
+!urxvt*color13: #ef0051
+!urxvt*color14: #4bb8fd
+!urxvt*color15: #a020f0
+!!urxvt*transparent: true
+!urxvt*shading: 50
+!urxvt*fading: 50
+!urxvt*font: xft:Bitstream\ Vera\ Sans\ Mono:style=roman:pixelsize=16
+!urxvt*scrollBar: false
+
+
+
+
+! include ~/.termcolors/astromouse
+! include ~/.termcolors/belge
+! include ~/.termcolors/cottonmouse
+! include ~/.termcolors/dark
+! include ~/.termcolors/darkcourses
+! include ~/.termcolors/dc1
+! include ~/.termcolors/dc2
+! include ~/.termcolors/dc3
+! include ~/.termcolors/dc4
+! include ~/.termcolors/desaturated
+! include ~/.termcolors/doomcide
+! include ~/.termcolors/dotshare
+! include ~/.termcolors/garbeam
+! include ~/.termcolors/getfresh
+! include ~/.termcolors/gray
+! include ~/.termcolors/grey
+! include ~/.termcolors/hund
+! include ~/.termcolors/jessicamouse
+! include ~/.termcolors/julie
+! include ~/.termcolors/lich
+! include ~/.termcolors/light
+! include ~/.termcolors/lightr
+! include ~/.termcolors/matrix
+! include ~/.termcolors/meyithi
+! include ~/.termcolors/mikado
+! include ~/.termcolors/milomouse
+! include ~/.termcolors/mirodark
+! include ~/.termcolors/mousemod
+! include ~/.termcolors/nucolors
+! include ~/.termcolors/obliviousgmn
+! include ~/.termcolors/phrakture
+! include ~/.termcolors/pinky
+! include ~/.termcolors/rasi
+! include ~/.termcolors/samtole
+! include ~/.termcolors/sexcolors
+! include ~/.termcolors/sider
+! include ~/.termcolors/simulacra
+! include ~/.termcolors/solarized
+! include ~/.termcolors/tango
+! include ~/.termcolors/technicolor-variant
+! include ~/.termcolors/technobass
+! include ~/.termcolors/test
+! include ~/.termcolors/tomorrow-night-blue
+! include ~/.termcolors/vimbrant
+! include ~/.termcolors/zenburn
+*background: #002b36
+*foreground: #657b83
+*cursorColor: #93a1a1
+
+!! black dark/light
+*color0: #073642
+*color8: #002b36
+
+!! red dark/light
+*color1: #dc322f
+*color9: #cb4b16
+
+!! green dark/light
+*color2: #859900
+*color10: #586e75
+
+!! yellow dark/light
+*color3: #b58900
+*color11: #657b83
+
+!! blue dark/light
+*color4: #268bd2
+*color12: #839496
+
+!! magenta dark/light
+*color5: #d33682
+*color13: #6c71c4
+
+!! cyan dark/light
+*color6: #2aa198
+*color14: #93a1a1
+
+!! white dark/light
+*color7: #eee8d5
+*color15: #fdf6e3
+
+
+
 
