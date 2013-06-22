@@ -124,6 +124,21 @@ endfunction
   "bind function to a hotkey
 map <F8> :call OpenCurrentLine() <CR><CR>
 
+
+function! OpenURL ()
+  " grab current line
+  let line = getline (".")
+  " grab links only; remove other words
+  let line = substitute(line, '[-?,a-zA-Z0-9]* ', '', "g")
+  " add qoutes around the current line to avoid spaces/symbols issues
+  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
+  " open with default system app, no messy output msg
+  exec "!xdg-open" line '>&/dev/null &'
+endfunction
+  "bind function to a hotkey
+map <leader>oo :call OpenCurrentLine() <CR><CR>
+
+
 " http://www.unix.com/unix-dummies-questions-answers/6025-extract-last-word-line-new-file.html
 " mplayer with youporn, youjizz, pornotube, xvideos
 function! OpenYTDL ()
@@ -168,11 +183,24 @@ endfunction
   "bind function to a hotkey
 map <leader>cc :call OpenCCLive() <CR><CR>
 
-function! OpenLivestreamer ()
+function! OpenYTDownload ()
   " grab current line
   let line = getline (".")
   " grab links only; remove other words
   let line = substitute(line, '[-?,a-zA-Z0-9]* ', '', "g")
+  " add qoutes around the current line to avoid spaces/symbols issues
+  let line = substitute(line, '^\(.*\)$', '"\1"', "g")
+  " stream with mplayer
+  exec '!cd ~/Downloads; youtube-dl' line
+endfunction
+  "bind function to a hotkey
+map <leader>ydd :call OpenYTDownload() <CR><CR>
+
+function! OpenLivestreamer ()
+  " grab current line
+  let line = getline (".")
+  " grab links only; remove other words
+  " let line = substitute(line, '[-?,a-zA-Z0-9]* ', '', "g")
   " add qoutes around the current line to avoid spaces/symbols issues
   let line = substitute(line, '^\(.*\)$', '"\1"', "g")
   " stream with mplayer
@@ -443,4 +471,11 @@ augroup myvimrc
     au!
     au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
 augroup END
+
+" unix or dos file format
+" http://stackoverflow.com/a/82743
+map <leader>unix :set fileformat=unix<CR>
+map <leader>dos :set fileformat=dos<CR>
+
+
 

@@ -162,7 +162,7 @@ alias trash='trash-put'
 alias wget='wget -c'				# continues/resumes
 alias weechat='weechat-curses'
 alias youtube-viewer-dev='$PATH_BINARY/youtube-viewer/youtube-viewer -C -f -4 --results=10'
-alias youtube-viewer='youtube-viewer -C -f -4 --results=15'	# color, fullscreen, 480p, number of results
+alias youtube-viewer='youtube-viewer -C -f -4 --results=10'	# color, fullscreen, 480p, number of results
 ## }}}
 #-------- Directory Shortcuts {{{
 #------------------------------------------------------
@@ -815,7 +815,7 @@ tsm-count() { echo "Blocklist rules:" $(curl -s --data \
 	'{"method": "session-get"}' localhost:9091/transmission/rpc -H \
 	"$(curl -s -D - localhost:9091/transmission/rpc | grep X-Transmission-Session-Id)" \
 	| cut -d: -f 11 | cut -d, -f1) ;}
-tsm-blocklist() { $PATH_SCRIPTS/ipblocklist.sh ;}		# update blocklist
+tsm-blocklist() { $PATH_SCRIPTS/ipblist.sh ;}		# update blocklist
 tsm-daemon() { transmission-daemon ;}
 tsm-quit() { killall transmission-daemon ;}
 tsm-altspeedenable() { transmission-remote --alt-speed ;}	# limit bandwidth
@@ -1158,26 +1158,6 @@ ilt-sports-trusport2.thai() { iliveto "vtcs21y0cqavcpi" ;} #2/8/13
 ilt-sports-ufc247() { iliveto "ffxe3gjqfs22tvu" ;} #2/8/13 skyaccess.org MMA
 ilt-sports-wwe() { iliveto "uk6s32lz5flsy0h" ;} #2/8/13 http://ppvdirect.com/  ProWrestling
 #}}}
-#-------- Internet Videos - Justin.tv {{{
-#------------------------------------------------------
-JTVM() { livestreamer -p mplayer http://www.justin.tv/"$1" best ;}
-JTVP() {
-	grepmatch=$(echo "$@" | sed 's/ /.*/g')
-        keyword="$(echo "http://www.justin.tv/directory/$@")"
-	pagenum=6
-	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo "$keyword?lang=en&page=$num"; done )
-	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -source "$line" \
-	| sed -n '/class\=\"title\"/,/<\/a>/p' | awk 'NR%3 != 0' | sed 'N;s/\n/,/' \
-	| awk -F\" '{print $5,"\n","http://www.justin.tv"$2}' |  sed -e 's/[>,]//g' -e 's/^[ \t]*//' ; done)
-
-	echo $videourl | vim -R -
-}
-jtv-ent() { JTVP "entertainment" ;}
-jtv-ent-doc() { JTVP "entertainment/documentary" ;}
-jtv-ent-music() { JTVP "entertainment/music" ;}
-jtv-ent-series() { JTVP "entertainment/series" ;}
-
-#}}}
 #-------- Internet Videos - Tgun.tv {{{
 #------------------------------------------------------
 # http://tgun.tv/ppv/?page_id=10066
@@ -1219,6 +1199,25 @@ tgtv-shows-marriedwithchildren() { tguntv "mwc" ;}
 tgtv-shows-breakingbad() { tguntv "bad" ;}
 tgtv-shows-alwayssunnyinphiladelphia() { tguntv "sunny" ;}
 
+
+#}}}
+#-------- Internet Videos - Justin.tv {{{
+#------------------------------------------------------
+JTVM() { livestreamer -p mplayer http://www.justin.tv/"$1" best ;}
+JTVP() {
+        keyword="$(echo "http://www.justin.tv/directory/$@")"
+	pagenum=6
+	pagenum_to_url=$(for num in $(seq 1 "$pagenum"); do echo "$keyword?lang=en&page=$num"; done )
+	videourl=$(echo "$pagenum_to_url" | while read line; do lynx -source "$line" \
+	| sed -n '/class\=\"title\"/,/<\/a>/p' | awk 'NR%3 != 0' | sed 'N;s/\n/,/' \
+	| awk -F\" '{print $5,"\n","http://www.justin.tv"$2}' |  sed -e 's/[>,]//g' -e 's/^[ \t]*//' ; done)
+
+	echo $videourl | vim -R -
+}
+jtv-ent() { JTVP "entertainment" ;}
+jtv-ent-doc() { JTVP "entertainment/documentary" ;}
+jtv-ent-music() { JTVP "entertainment/music" ;}
+jtv-ent-series() { JTVP "entertainment/series" ;}
 
 #}}}
 #-------- Internet Videos - Porn {{{
@@ -2691,7 +2690,6 @@ mp3skull() {
         keyword="$(echo "http://mp3skull.com/mp3/$@.html" | sed 's/ /\_/g')"
 	music_url=$(lynx -source "$keyword" | awk '/href/ && /\.mp3/' \
 		| cut -d\" -f4 | sed 's/ /\%20/g' | awk '!x[$0]++')
-
 	echo $music_url | sed 's/\ /\n/g' | sed 's/\%20/ /g' | vim -R -
 }
 
